@@ -1,12 +1,15 @@
 from flask import Flask, render_template, redirect, request
-from models import *
+from src.models import *
 
 app = Flask(__name__)
 
 db.init_app(app)
 app.app_context().push()
-
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatabom.sqlite3"
+
+@app.route('/', methods = ['GET'])
+def root():
+    return redirect('/sections')
 
 @app.route('/sections', methods = ['GET','POST'])
 def all_sections():
@@ -44,10 +47,8 @@ def create_book(section_id):
         return redirect(f'/{section_id}/books')
     return render_template('create_book.html', section_id = section_id)
 
-
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
 
 #OTHER CRUD OPERATIONS
 # 3. ---UPDATE---
