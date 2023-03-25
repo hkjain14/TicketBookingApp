@@ -30,7 +30,10 @@ def registerUser():
 def registerUserPost():
     username = request.form.get('username')
     password = request.form.get('password')
-    #TODO: Check that username is unique
+    users = User.query.filter_by(user_username=username).all()
+    if users != []:
+        # TODO : Show error that already registered credentials
+        return redirect('/register')
     user = User(user_username = username, user_password = password)
     db.session.add(user)
     db.session.commit()
