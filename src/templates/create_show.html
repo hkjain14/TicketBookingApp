@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Show</title>
+</head>
+<body>
+Creating a new show.
+<form action="/create/show" method="post">
+    <label for="showName">Show Name: </label>
+    <input id="showName" type="text" name="showName">
+    <br/>
+    <label for="rating">Rating: </label>
+    <input id="rating" type="text" name="rating">
+    <br/>
+    <label for="startTime">Start Time: </label>
+    <input id="startTime" type="text" name="startTime">
+    <br/>
+    <label for="endTime">End Time: </label>
+    <input id="endTime" type="text" name="endTime">
+    <br/>
+    <label for="tags">Tags: </label>
+    <input id="tags" type="text" name="tags">
+    <br/>
+    <label for="price">Price: </label>
+    <input id="price" type="text" name="price">
+    <input type="hidden" name="venueId" value={{venueId}} >
+    <br/>
+    <input type="submit" value="Save">
+</form>
+</body>
+</html>

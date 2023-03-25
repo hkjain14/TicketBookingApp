@@ -7,7 +7,50 @@
     <title>Ticket Show</title>
 </head>
 <body>
-{{ admin_username }}'s dashboard
+{{ username }}'s dashboard
+<form action="/create/venue" method="get">
+    <input type="submit" value="+">
+</form>
+<a href="/">Logout</a>
+<a href="/summary">Summary</a>
 
+<ul>
+    {% for venue in venues %}
+    <li>
+        {{ venue.venue_name }}
+        <form action="/edit/venue" method="get">
+            <input type="hidden" name="venueId" value={{venue.venue_id}}>
+            <input type="submit" value="Edit">
+        </form>
+        <form action="/delete/venue" method="post">
+            <input type="hidden" name="venueId" value={{venue.venue_id}}>
+            <input type="submit" value="Delete">
+        </form>
+        <form action="/create/show" method="get">
+            <input type="hidden" name="venueId" value={{venue.venue_id}}>
+            <input type="submit" value="+">
+        </form>
+
+
+        <ul>
+            {% for show in venue.showsArr %}
+            <li>
+                {{ show.show_name }}
+                <form action="/edit/show" method="get">
+                    <input type="hidden" name="showId" value={{show.show_id}}>
+                    <input type="submit" value="Edit">
+                </form>
+                <form action="/delete/show" method="post">
+                    <input type="hidden" name="showId" value={{show.show_id}}>
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+
+    </li>
+    {% endfor %}
+</ul>
 </body>
 </html>

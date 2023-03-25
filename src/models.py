@@ -17,16 +17,19 @@ class User(db.Model):
         return "<Users %r>" %self.user_username
 
 class Venue(db.Model):
+    __tablename__ = "venue"
     venue_id = db.Column(db.Integer(), primary_key = True)
     venue_name = db.Column(db.String(50), nullable=False)
     venue_place = db.Column(db.String(50), nullable=False)
     venue_location = db.Column(db.String(50), nullable = False)
     venue_capacity = db.Column(db.Integer(), nullable = False)
-    shows = db.relationship("Show", backref = "venue", cascade="all, delete")
+    shows = db.relationship("Show", backref = "venue", passive_deletes='all')
     def __repr__(self):
         return "<Users %r>" %self.user_name
 
+
 class Show(db.Model):
+    __tablename__ = "show"
     show_id = db.Column(db.Integer(), primary_key=True)
     show_name = db.Column(db.String(50), nullable=False)
     show_rating = db.Column(db.String(50), nullable=False)
@@ -35,7 +38,7 @@ class Show(db.Model):
     show_tags = db.Column(db.String(50), nullable=False)
     show_price = db.Column(db.Integer(), nullable=False)
     show_available_seats = db.Column(db.Integer(), nullable=False)
-    show_venue_id = db.Column(db.Integer(), db.ForeignKey("venue.venue_id"), nullable=False)
+    show_venue_id = db.Column(db.Integer(), db.ForeignKey("venue.venue_id", ondelete='CASCADE'))
     bookings = db.relationship("Booking", backref="show", cascade="all, delete")
     def __repr__(self):
         return "<Show %r>" %self.show_name
