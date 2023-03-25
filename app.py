@@ -4,7 +4,7 @@ from models import *
 app = Flask(__name__)
 
 db.init_app(app)
-app.app_context().push() #Pushing this application to application context
+app.app_context().push()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatabom.sqlite3"
 
@@ -21,15 +21,13 @@ def all_books():
 @app.route('/<int:section_id>/books')
 def sect_books(section_id):
     s1 = Section.query.get(section_id)
-    books = Book.query.filter_by(sect= section_id).all()#Here directly section_id will also work as we have taken it as a variable
-    # books = Book.query.filter_by(sect = s1.section_id).all()
-    # books = s1.books
+    books = Book.query.filter_by(sect= section_id).all()
     return render_template('section_books.html', books = books, s1 = s1)
 
-@app.route('/create/section', methods = ['GET', 'POST']) #Here GET & POST are important as i will be retrieving the data in form of htmlform through GET & putting in data through POST
+@app.route('/create/section', methods = ['GET', 'POST'])
 def create_section():
     if request.method == "POST":
-        sect_name = request.form.get('s_name') #whatever you put her should be the value of name in html
+        sect_name = request.form.get('s_name')
         s1 = Section(section_name = sect_name)
         db.session.add(s1)
         db.session.commit()
@@ -44,7 +42,6 @@ def create_book(section_id):
         db.session.add(b1)
         db.session.commit()
         return redirect(f'/{section_id}/books')
-        # return redirect(sect_books)
     return render_template('create_book.html', section_id = section_id)
 
 

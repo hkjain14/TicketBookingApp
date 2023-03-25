@@ -1,1 +1,0 @@
-sect_name = request.form.get('s_name')
