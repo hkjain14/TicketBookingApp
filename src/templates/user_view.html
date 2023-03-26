@@ -7,7 +7,32 @@
     <title>Ticket Show</title>
 </head>
 <body>
-{{ username }} logged in
+{{ username }}'s Dashboard
+<a href="/profile">Profile</a>
+<a href="/bookings">Bookings</a>
 <a href="/">Logout</a>
+
+
+<ul>
+    {% for venue in venues %}
+    <li>
+        {{ venue.venue_name }}
+        <ul>
+            {% for show in venue.showsArr %}
+            <li>
+                {{ show.show_name }}
+                {{ show.show_start_time }}
+                <form action="/book/show" method="get">
+                    <input type="hidden" name="showId" value={{show.show_id}}>
+                    <input type="submit" value="Book">
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
+
 </body>
 </html>

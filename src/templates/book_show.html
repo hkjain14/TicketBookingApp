@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book show</title>
+</head>
+<body>
+{{ username }}'s Dashboard
+<a href="/profile">Profile</a>
+<a href="/bookings">Bookings</a>
+<a href="/">Logout</a>
+
+<br/>
+Booking - {{showName}} {{venueName}}
+
+<br/>
+Time - {{startTime}} - {{endTime}}
+
+<br/>
+Available Seats - {{seats}}
+
+<br/>
+
+
+<form action="/book/show" method="post">
+    <label for="bookCount">Number:  </label>
+    <input id="bookCount" type="text" name="bookCount">
+    <br/>
+    Price:  {{price}}
+    <br/>
+    Total: <span id="totalAmount">default</span>
+    <br/>
+<!--    TODO: Dont allow >= available booking from html side only-->
+    <input type="submit" value="Confirm Booking">
+    <script>
+        <!-- TODO:    Fix total-->
+        document.getElementById("totalAmount").innerHTML = `{price}`
+    </script>
+</form>
+</body>
+</html>

@@ -194,7 +194,31 @@ def summary():
 ### User view
 @app.route('/user', methods = ['GET'])
 def viewUser():
-    return render_template('user_view.html', username=session['username'])
+    venues = Venue.query.all()
+    for venue in venues:
+        venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
+    return render_template('user_view.html', username=session['username'], venues=venues)
+
+@app.route('/profile', methods = ['GET'])
+def profile():
+    return render_template('profile.html', username=session['username'])
+
+@app.route('/bookings', methods = ['GET'])
+def bookings():
+    return render_template('bookings.html', username=session['username'])
+
+@app.route('/book/show', methods = ['GET'])
+def bookShow():
+    showId = request.args.get('showId')
+    show = Show.query.get(showId)
+    venue = Venue.query.get(show.show_venue_id)
+    return render_template('book_show.html', username=session['username'], showName=show.show_name, venueName=venue.venue_name, startTime=show.show_start_time, endTime=show.show_end_time, seats=show.show_available_seats, price=show.show_price)
+
+@app.route('/book/show', methods = ['POST'])
+def postBookShow():
+    #TODO: do Booking
+
+    return redirect('/bookings')
 
 if __name__ == "__main__":
     db.create_all()
@@ -204,4 +228,6 @@ if __name__ == "__main__":
         db.session.add(admin)
         db.session.commit()
     app.run(debug=False)
-### delete shows by cascading when venue is deleted
+
+#TODO: separate out routes in files
+#TODO: at end, check each page's title
