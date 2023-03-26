@@ -13,16 +13,16 @@
 Creating a new venue.
 <form action="/create/venue" method="post">
     <label for="venueName">Venue Name: </label>
-    <input id="venueName" type="text" name="venueName">
+    <input id="venueName" type="text" name="venueName" required>
     <br/>
     <label for="place">Place: </label>
-    <input id="place" type="text" name="place">
+    <input id="place" type="text" name="place" required>
     <br/>
     <label for="location">Location: </label>
-    <input id="location" type="text" name="location">
+    <input id="location" type="text" name="location" required>
     <br/>
     <label for="capacity">Capacity: </label>
-    <input id="capacity" type="text" name="capacity">
+    <input id="capacity" type="number" min="0" name="capacity" required>
     <br/>
     <input type="submit" value="Save">
 </form>

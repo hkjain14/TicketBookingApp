@@ -4,7 +4,7 @@ from src.models import *
 app = Flask(__name__)
 db.init_app(app)
 app.app_context().push()
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3?check_same_thread=False"
 app.config['SECRET_KEY'] = 'SecretKeyForSession'
 
 ### Root Routes
@@ -87,7 +87,7 @@ def viewAdmin():
 
 @app.route('/create/venue', methods = ['GET'])
 def createVenue():
-    return render_template('create_venue.html')
+    return render_template('create_venue.html', username=session['username'])
 
 @app.route('/create/venue', methods = ['POST'])
 def postCreateVenue():
@@ -104,7 +104,7 @@ def postCreateVenue():
 @app.route('/edit/venue', methods = ['GET'])
 def editVenue():
     venueId = request.args.get('venueId')
-    return render_template('edit_venue.html', venueId=venueId)
+    return render_template('edit_venue.html', venueId=venueId, username=session['username'])
 
 @app.route('/edit/venue', methods = ['POST'])
 def postEditVenue():
@@ -139,7 +139,7 @@ def deleteVenue():
 @app.route('/create/show', methods = ['GET'])
 def createShow():
     venueId = request.args.get('venueId')
-    return render_template('create_show.html', venueId=venueId)
+    return render_template('create_show.html', venueId=venueId, username=session['username'])
 
 @app.route('/create/show', methods = ['POST'])
 def postCreateShow():
@@ -162,7 +162,7 @@ def postCreateShow():
 @app.route('/edit/show', methods = ['GET'])
 def editShow():
     showId = request.args.get('showId')
-    return render_template('edit_show.html', showId=showId)
+    return render_template('edit_show.html', showId=showId, username=session['username'])
 
 @app.route('/edit/show', methods = ['POST'])
 def postEditShow():
@@ -181,6 +181,7 @@ def postEditShow():
 
 @app.route('/delete/show', methods = ['POST'])
 def deleteShow():
+    #TODO: Delete show should delete corresponding show from booking DB
     showId = request.form.get('showId')
     Show.query.filter_by(show_id=showId).delete()
     db.session.commit()
@@ -188,12 +189,14 @@ def deleteShow():
 
 @app.route('/summary', methods = ['GET'])
 def summary():
-    return render_template('summary.html')
+    # TODO: Fill summary
+    return render_template('summary.html', username=session['username'])
 
 
 ### User view
 @app.route('/user', methods = ['GET'])
 def viewUser():
+    #TODO: Search by show/venue
     venues = Venue.query.all()
     for venue in venues:
         venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
@@ -201,23 +204,45 @@ def viewUser():
 
 @app.route('/profile', methods = ['GET'])
 def profile():
+    # TODO: Fill profile
     return render_template('profile.html', username=session['username'])
 
 @app.route('/bookings', methods = ['GET'])
 def bookings():
-    return render_template('bookings.html', username=session['username'])
+    #TODO: Rate view
+    username = session['username']
+    userId = User.query.filter_by(user_username=username).all()[0].user_id
+    bookings = Booking.query.filter_by(booking_user_id=userId).all()
+    for booking in bookings:
+        showId = booking.booking_show_id
+        show = Show.query.filter_by(show_id=showId).all()[0]
+        venueId = show.show_venue_id
+        venue = Venue.query.filter_by(venue_id=venueId).all()[0]
+        booking.venueName = venue.venue_name
+        booking.showName = show.show_name
+        booking.startTime = show.show_start_time
+        booking.endTime = show.show_end_time
+    return render_template('bookings.html', username=session['username'], bookings=bookings)
 
 @app.route('/book/show', methods = ['GET'])
 def bookShow():
     showId = request.args.get('showId')
     show = Show.query.get(showId)
     venue = Venue.query.get(show.show_venue_id)
-    return render_template('book_show.html', username=session['username'], showName=show.show_name, venueName=venue.venue_name, startTime=show.show_start_time, endTime=show.show_end_time, seats=show.show_available_seats, price=show.show_price)
+    return render_template('book_show.html', username=session['username'], showId=showId, showName=show.show_name, venueName=venue.venue_name, startTime=show.show_start_time, endTime=show.show_end_time, seats=show.show_available_seats, price=show.show_price)
 
 @app.route('/book/show', methods = ['POST'])
 def postBookShow():
-    #TODO: do Booking
-
+    bookCount = int(request.form.get('bookCount'))
+    showId = request.form.get('showId')
+    username = session['username']
+    userId = User.query.filter_by(user_username=username).all()[0].user_id
+    booking = Booking(booking_tickets_booked=bookCount, booking_show_id=showId, booking_user_id=userId)
+    # Update available seat count in Show table
+    show = Show.query.get(showId)
+    show.show_available_seats = show.show_available_seats - bookCount
+    db.session.add(booking)
+    db.session.commit()
     return redirect('/bookings')
 
 if __name__ == "__main__":

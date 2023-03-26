@@ -13,22 +13,22 @@
 Creating a new show.
 <form action="/create/show" method="post">
     <label for="showName">Show Name: </label>
-    <input id="showName" type="text" name="showName">
+    <input id="showName" type="text" name="showName" required>
     <br/>
     <label for="rating">Rating: </label>
-    <input id="rating" type="text" name="rating">
+    <input id="rating" type="text" name="rating" required>
     <br/>
     <label for="startTime">Start Time: </label>
-    <input id="startTime" type="text" name="startTime">
+    <input id="startTime" type="text" name="startTime" required>
     <br/>
     <label for="endTime">End Time: </label>
-    <input id="endTime" type="text" name="endTime">
+    <input id="endTime" type="text" name="endTime" required>
     <br/>
     <label for="tags">Tags: </label>
-    <input id="tags" type="text" name="tags">
+    <input id="tags" type="text" name="tags" required>
     <br/>
     <label for="price">Price: </label>
-    <input id="price" type="text" name="price">
+    <input id="price" type="number" min="0" name="price" required>
     <input type="hidden" name="venueId" value={{venueId}} >
     <br/>
     <input type="submit" value="Save">

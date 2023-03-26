@@ -24,8 +24,17 @@
                 {{ show.show_start_time }}
                 <form action="/book/show" method="get">
                     <input type="hidden" name="showId" value={{show.show_id}}>
-                    <input type="submit" value="Book">
+                    <input type="submit" id="submit" value="Book">
+                    <input type="hidden" id="availableSeats" value={{show.show_available_seats}}>
                 </form>
+                <script>
+                    const availableSeats = document.getElementById("availableSeats").value;
+                    if(availableSeats <= 0) {
+                        const submitEl = document.getElementById("submit");
+                        submitEl.value = "Housefull";
+                        submitEl.disabled = true;
+                    }
+                </script>
             </li>
             {% endfor %}
         </ul>

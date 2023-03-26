@@ -25,18 +25,26 @@ Available Seats - {{seats}}
 
 
 <form action="/book/show" method="post">
-    <label for="bookCount">Number:  </label>
-    <input id="bookCount" type="text" name="bookCount">
+    <input type="hidden" name="showId" value={{showId}}>
+    <label for="bookCount">Number: </label>
+    <input id="bookCount" type="number" min="0" max={{seats}} name="bookCount" required>
     <br/>
-    Price:  {{price}}
+    <label for="price">Price: </label>
+    <input type="number" id="price" value={{price}} readonly>
     <br/>
-    Total: <span id="totalAmount">default</span>
+    <label for="totalAmount">Total: </label>
+    <input type="number" id="totalAmount" value="0" readonly>
     <br/>
-<!--    TODO: Dont allow >= available booking from html side only-->
     <input type="submit" value="Confirm Booking">
     <script>
-        <!-- TODO:    Fix total-->
-        document.getElementById("totalAmount").innerHTML = `{price}`
+        //TODO: Fix Total ammount
+        const price = document.getElementById("price").value;
+        let bookCountEl2 = document.getElementById("bookCount");
+        let bookCount2 = bookCountEl2.valueAsNumber;
+        bookCountEl2.addEventListener('input', () => {
+            bookCount2 = bookCountEl2.valueAsNumber;
+        });
+        document.getElementById("totalAmount").value = bookCount2
     </script>
 </form>
 </body>
