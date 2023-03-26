@@ -128,7 +128,6 @@ def postEditVenue():
 
 @app.route('/delete/venue', methods = ['POST'])
 def deleteVenue():
-    #TODO: Deletion of venue should delete shows
     venueId = request.form.get('venueId')
     venue = db.session.query(Venue).filter(Venue.venue_id == venueId).first()
     db.session.delete(venue)
@@ -181,7 +180,6 @@ def postEditShow():
 
 @app.route('/delete/show', methods = ['POST'])
 def deleteShow():
-    #TODO: Delete show should delete corresponding show from booking DB
     showId = request.form.get('showId')
     Show.query.filter_by(show_id=showId).delete()
     db.session.commit()
@@ -196,7 +194,7 @@ def summary():
 ### User view
 @app.route('/user', methods = ['GET'])
 def viewUser():
-    #TODO: Search by show/venue
+    #TODO: Search by show/venue. Rating based should be >=rating, not exact
     venues = Venue.query.all()
     for venue in venues:
         venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
@@ -254,5 +252,13 @@ if __name__ == "__main__":
         db.session.commit()
     app.run(debug=False)
 
-#TODO: separate out routes in files
-#TODO: at end, check each page's title
+# TODO: separate out routes in files
+# TODO: at end, check each page's title
+# TODO: CORE: remova/deletion of show/venue : confirm button
+# TODO: CORE: Deletion of show by admin should delete booking of user
+# TODO: CORE: Deletion of venue by admin should delete booking of user
+# TODO: CORE: Deletion of venue by admin should delete show
+# TODO: Reset username in session when app restarts
+# TODO: Check logged in user/admin before showing /user or /admin
+# TODO: Show creation should not clash time with already created show (thoda complicated hai (compared to others))
+# TODO: venue creation/db entry : multi lang support
