@@ -27,12 +27,11 @@ class Venue(db.Model):
     def __repr__(self):
         return "<Users %r>" %self.user_name
 
-
 class Show(db.Model):
     __tablename__ = "show"
     show_id = db.Column(db.Integer(), primary_key=True)
     show_name = db.Column(db.String(50), nullable=False)
-    show_rating = db.Column(db.String(50), nullable=False)
+    show_rating = db.Column(db.Integer(), nullable=False)
     show_start_time = db.Column(db.String(50), nullable=False)
     show_end_time = db.Column(db.String(50), nullable=False)
     show_tags = db.Column(db.String(50), nullable=False)

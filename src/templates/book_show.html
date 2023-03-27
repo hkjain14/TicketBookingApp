@@ -37,8 +37,8 @@ Available Seats - {{seats}}
     <br/>
     <input type="submit" value="Confirm Booking">
     <script>
-        //TODO: Fix Total ammount
-        const price = document.getElementById("price").value;
+        //TODO: Fix Total amount
+        const price = {{price}};
         let bookCountEl2 = document.getElementById("bookCount");
         let bookCount2 = bookCountEl2.valueAsNumber;
         bookCountEl2.addEventListener('input', () => {

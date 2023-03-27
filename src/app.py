@@ -4,7 +4,7 @@ from src.models import *
 app = Flask(__name__)
 db.init_app(app)
 app.app_context().push()
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3?check_same_thread=False"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3"
 app.config['SECRET_KEY'] = 'SecretKeyForSession'
 
 ### Root Routes
@@ -19,6 +19,7 @@ def postRoot():
     if user_type == "User Login":
         return redirect('/login/user')
     return redirect('/login/admin')
+
 
 
 ### Login Routes
@@ -37,8 +38,9 @@ def loginUserPost():
 
     users = User.query.filter_by(user_username=username).all()
     if users != [] and users[0].user_password == password:
+        # User logged in successfully.
         session['username'] = username
-        return redirect(url_for('.viewUser'))
+        return redirect('/user')
     # TODO : Show error that wrong credentials
     return redirect('/login/user')
 
@@ -69,10 +71,11 @@ def loginAdminPost():
     username = request.form.get('username')
     password = request.form.get('password')
 
+    # Assumption is that there is a single admin of app
     admin = Admin.query.all()[0]
     if(username == admin.admin_username and password == admin.admin_password):
         session['username'] = username
-        return redirect(url_for('.viewAdmin'))
+        return redirect('/admin')
     # TODO: Show error that wrong credentials
     return redirect('/login/admin')
 
@@ -200,27 +203,7 @@ def viewUser():
         venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
     return render_template('user_view.html', username=session['username'], venues=venues)
 
-@app.route('/profile', methods = ['GET'])
-def profile():
-    # TODO: Fill profile
-    return render_template('profile.html', username=session['username'])
 
-@app.route('/bookings', methods = ['GET'])
-def bookings():
-    #TODO: Rate view
-    username = session['username']
-    userId = User.query.filter_by(user_username=username).all()[0].user_id
-    bookings = Booking.query.filter_by(booking_user_id=userId).all()
-    for booking in bookings:
-        showId = booking.booking_show_id
-        show = Show.query.filter_by(show_id=showId).all()[0]
-        venueId = show.show_venue_id
-        venue = Venue.query.filter_by(venue_id=venueId).all()[0]
-        booking.venueName = venue.venue_name
-        booking.showName = show.show_name
-        booking.startTime = show.show_start_time
-        booking.endTime = show.show_end_time
-    return render_template('bookings.html', username=session['username'], bookings=bookings)
 
 @app.route('/book/show', methods = ['GET'])
 def bookShow():
@@ -235,13 +218,38 @@ def postBookShow():
     showId = request.form.get('showId')
     username = session['username']
     userId = User.query.filter_by(user_username=username).all()[0].user_id
+    # Create row in Booking table
     booking = Booking(booking_tickets_booked=bookCount, booking_show_id=showId, booking_user_id=userId)
+    db.session.add(booking)
     # Update available seat count in Show table
     show = Show.query.get(showId)
     show.show_available_seats = show.show_available_seats - bookCount
-    db.session.add(booking)
     db.session.commit()
     return redirect('/bookings')
+
+@app.route('/bookings', methods = ['GET'])
+def bookings():
+    #TODO: Rate view
+    username = session['username']
+    userId = User.query.filter_by(user_username=username).all()[0].user_id
+    bookings = Booking.query.filter_by(booking_user_id=userId).all()
+
+    for booking in bookings:
+        showId = booking.booking_show_id
+        show = Show.query.filter_by(show_id=showId).all()[0]
+        venueId = show.show_venue_id
+        venue = Venue.query.filter_by(venue_id=venueId).all()[0]
+        booking.venueName = venue.venue_name
+        booking.showName = show.show_name
+        booking.startTime = show.show_start_time
+        booking.endTime = show.show_end_time
+
+    return render_template('bookings.html', username=session['username'], bookings=bookings)
+
+@app.route('/profile', methods = ['GET'])
+def profile():
+    # TODO: Fill profile
+    return render_template('profile.html', username=session['username'])
 
 if __name__ == "__main__":
     db.create_all()
@@ -252,7 +260,7 @@ if __name__ == "__main__":
         db.session.commit()
     app.run(debug=False)
 
-# TODO: separate out routes in files
+# TODO: separate out routes in files (not that important)
 # TODO: at end, check each page's title
 # TODO: CORE: remova/deletion of show/venue : confirm button
 # TODO: CORE: Deletion of show by admin should delete booking of user
@@ -261,4 +269,4 @@ if __name__ == "__main__":
 # TODO: Reset username in session when app restarts
 # TODO: Check logged in user/admin before showing /user or /admin
 # TODO: Show creation should not clash time with already created show (thoda complicated hai (compared to others))
-# TODO: venue creation/db entry : multi lang support
+# TODO: venue creation/db entry : multi lang support - utf8 explicit enable for db init
