@@ -5,17 +5,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Show</title>
+    <!-- Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <form method="post">
-        <input type="submit" name="user_type" value="User Login">
-    </form>
-
-    <form method="post">
-        <input type="submit" name="user_type" value="Admin Login">
-    </form>
+<!-- Navbar  -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('root')}}">
+            <img src="https://img.icons8.com/color/96/null/popcorn.png" alt="Logo" width="30" height="26" class="d-inline-block align-text-top">
+            TicketShow
+            </a>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('root')}}">Home</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<!-- Bootstrap container class -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <h2 class="text-center mb-4">Welcome to Ticket-Show Application</h2>
+            <p class="lead" style="max-width: 100%">Thank you for visiting my application.
+                <br>
+                <br>
+                As a recent graduate of the App Dev 1 course, I am excited to showcase my Ticket booking application. This project serves as a
+                testament to my skills in web development and my passion for creating dynamic, user-friendly websites.
+    
+            <!-- Bootstrap form classes -->
+            <form method="post" class="mb-3 d-flex justify-content-center">
+                <div class="mb-3 me-2">
+                    <input type="submit" name="user_type" value="User Login" class="btn btn-outline-danger btn-lg">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" name="user_type" value="Admin Login" class="btn btn-outline-danger btn-lg">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
+<!-- Bootstrap JavaScript links -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js" integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i" crossorigin="anonymous"></script>
 </body>
 </html>

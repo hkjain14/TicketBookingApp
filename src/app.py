@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, url_for, session
-from src.models import *
+from models import *
 
 app = Flask(__name__)
 db.init_app(app)
