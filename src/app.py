@@ -4,8 +4,10 @@ from models import *
 app = Flask(__name__)
 db.init_app(app)
 app.app_context().push()
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ticketDb.sqlite3?charset=utf8"
 app.config['SECRET_KEY'] = 'SecretKeyForSession'
+admin_username='ashish'
+admin_password='gaba'
 
 ### Root Routes
 @app.route('/', methods = ['GET'])
@@ -41,8 +43,7 @@ def loginUserPost():
         # User logged in successfully.
         session['username'] = username
         return redirect('/user')
-    # TODO : Show error that wrong credentials
-    return redirect('/login/user')
+    return render_template('user_login.html', errorMessage='Incorrect credentials. Please try again.')
 
 @app.route('/register', methods = ['GET'])
 def registerUser():
@@ -55,8 +56,7 @@ def registerUserPost():
 
     users = User.query.filter_by(user_username=username).all()
     if users != []:
-        # TODO : Show error that already registered credentials
-        return redirect('/register')
+        return render_template('user_register.html', errorMessage='Username already registered. Please choose a different username.')
     user = User(user_username = username, user_password = password)
     db.session.add(user)
     db.session.commit()
@@ -76,13 +76,17 @@ def loginAdminPost():
     if(username == admin.admin_username and password == admin.admin_password):
         session['username'] = username
         return redirect('/admin')
-    # TODO: Show error that wrong credentials
-    return redirect('/login/admin')
+    return render_template('admin_login.html', errorMessage='Incorrect credentials. Please try again.')
 
 
 ### Admin view
 @app.route('/admin', methods = ['GET'])
 def viewAdmin():
+    #Check that only logged in admin can access /admin
+    admin = Admin.query.all()[0]
+    if(session.get('username') == None or session.get('username') != admin.admin_username):
+        return redirect('/')
+
     venues = Venue.query.all()
     for venue in venues:
         venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
@@ -197,6 +201,10 @@ def summary():
 ### User view
 @app.route('/user', methods = ['GET'])
 def viewUser():
+    #Check that only logged in user can access /user
+    if (session.get('username') == None or User.query.filter_by(user_username=session.get('username')).all() == []):
+        return redirect('/')
+
     #TODO: Search by show/venue. Rating based should be >=rating, not exact
     venues = Venue.query.all()
     for venue in venues:
@@ -229,7 +237,7 @@ def postBookShow():
 
 @app.route('/bookings', methods = ['GET'])
 def bookings():
-    #TODO: Rate view
+    #TODO: Rate button view
     username = session['username']
     userId = User.query.filter_by(user_username=username).all()[0].user_id
     bookings = Booking.query.filter_by(booking_user_id=userId).all()
@@ -255,18 +263,9 @@ if __name__ == "__main__":
     db.create_all()
     admins = Admin.query.all()
     if admins == []:
-        admin = Admin(admin_username='ashish', admin_password='gaba')
+        admin = Admin(admin_username=admin_username, admin_password=admin_password)
         db.session.add(admin)
         db.session.commit()
     app.run(debug=False)
 
 # TODO: separate out routes in files (not that important)
-# TODO: at end, check each page's title
-# TODO: CORE: remova/deletion of show/venue : confirm button
-# TODO: CORE: Deletion of show by admin should delete booking of user
-# TODO: CORE: Deletion of venue by admin should delete booking of user
-# TODO: CORE: Deletion of venue by admin should delete show
-# TODO: Reset username in session when app restarts
-# TODO: Check logged in user/admin before showing /user or /admin
-# TODO: Show creation should not clash time with already created show (thoda complicated hai (compared to others))
-# TODO: venue creation/db entry : multi lang support - utf8 explicit enable for db init

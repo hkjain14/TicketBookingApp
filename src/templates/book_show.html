@@ -27,24 +27,20 @@ Available Seats - {{seats}}
 <form action="/book/show" method="post">
     <input type="hidden" name="showId" value={{showId}}>
     <label for="bookCount">Number: </label>
-    <input id="bookCount" type="number" min="0" max={{seats}} name="bookCount" required>
+    <input id="bookCount" oninput="bookCountChangeFunc(this)"  type="number" min="0" max={{seats}} name="bookCount" required>
     <br/>
     <label for="price">Price: </label>
     <input type="number" id="price" value={{price}} readonly>
     <br/>
     <label for="totalAmount">Total: </label>
-    <input type="number" id="totalAmount" value="0" readonly>
+    <input type="number" id="totalAmount" readonly>
     <br/>
     <input type="submit" value="Confirm Booking">
     <script>
-        //TODO: Fix Total amount
         const price = {{price}};
-        let bookCountEl2 = document.getElementById("bookCount");
-        let bookCount2 = bookCountEl2.valueAsNumber;
-        bookCountEl2.addEventListener('input', () => {
-            bookCount2 = bookCountEl2.valueAsNumber;
-        });
-        document.getElementById("totalAmount").value = bookCount2
+        function bookCountChangeFunc(bookCountEl) {
+            document.getElementById("totalAmount").value = bookCountEl.value * price
+        }
     </script>
 </form>
 </body>
