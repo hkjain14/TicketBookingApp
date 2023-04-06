@@ -13,31 +13,46 @@
 <a href="/">Logout</a>
 
 
+<br/>
+<br/>
+<br/>
+
+<form action="/user" method="get">
+    <label for="placeFilter">Search venues by place:</label>
+    <input id="placeFilter" type="text" name="placeFilter" >
+    <label for="ratingFilter">Search shows by minimum rating:</label>
+    <input id="ratingFilter" type="number" min="1" max="5" name="ratingFilter">
+    <label for="tagsFilter">Search shows by tags:</label>
+    <input id="tagsFilter" type="text" name="tagsFilter">
+    <input type="submit" value="Filter">
+</form>
+<br/>
 <ul>
     {% for venue in venues %}
-    <li>
-        {{ venue.venue_name }}
-        <ul>
-            {% for show in venue.showsArr %}
-            <li>
-                {{ show.show_name }}
-                {{ show.show_start_time }}
-                <form action="/book/show" method="get">
-                    <input type="hidden" name="showId" value={{show.show_id}}>
-                    <input type="submit" id="submit" value="Book">
-                </form>
-                <script>
-                    const availableSeats = {{ show.show_available_seats }}
-                    if(availableSeats <= 0) {
-                        const submitEl = document.getElementById("submit");
-                        submitEl.value = "Housefull";
-                        submitEl.disabled = true;
-                    }
-                </script>
-            </li>
-            {% endfor %}
-        </ul>
-    </li>
+        <li>
+            {{ venue.venue_name }} - {{ venue.venue_place }}
+            <ul>
+                {% for show in venue.showsArr %}
+                    <li>
+                        {{ show.show_name }}
+                        {{ show.show_start_time }}
+                        <form action="/book/show" method="get">
+                            <input type="hidden" name="showId" value={{ show.show_id }}>
+                            <input type="submit" id="submit" value="Book">
+                        </form>
+                        <script>
+                            const availableSeats =
+                            {{ show.show_available_seats }}
+                            if (availableSeats <= 0) {
+                                const submitEl = document.getElementById("submit");
+                                submitEl.value = "Housefull";
+                                submitEl.disabled = true;
+                            }
+                        </script>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
     {% endfor %}
 </ul>
 

@@ -73,7 +73,7 @@ def loginAdminPost():
 
     # Assumption is that there is a single admin of app
     admin = Admin.query.all()[0]
-    if(username == admin.admin_username and password == admin.admin_password):
+    if username == admin.admin_username and password == admin.admin_password:
         session['username'] = username
         return redirect('/admin')
     return render_template('admin_login.html', errorMessage='Incorrect credentials. Please try again.')
@@ -84,7 +84,7 @@ def loginAdminPost():
 def viewAdmin():
     #Check that only logged in admin can access /admin
     admin = Admin.query.all()[0]
-    if(session.get('username') == None or session.get('username') != admin.admin_username):
+    if session.get('username') == None or session.get('username') != admin.admin_username:
         return redirect('/')
 
     venues = Venue.query.all()
@@ -137,9 +137,9 @@ def postEditVenue():
 def deleteVenue():
     venueId = request.form.get('venueId')
     venue = db.session.query(Venue).filter(Venue.venue_id == venueId).first()
-    db.session.delete(venue)
-    # Venue.query.filter_by(venue_id=venueId).delete()
-    db.session.commit()
+    if venue:
+        db.session.delete(venue)
+        db.session.commit()
     return redirect('/admin')
 
 @app.route('/create/show', methods = ['GET'])
@@ -188,8 +188,10 @@ def postEditShow():
 @app.route('/delete/show', methods = ['POST'])
 def deleteShow():
     showId = request.form.get('showId')
-    Show.query.filter_by(show_id=showId).delete()
-    db.session.commit()
+    show = db.session.query(Show).filter(Show.show_id == showId).first()
+    if show:
+        db.session.delete(show)
+        db.session.commit()
     return redirect('/admin')
 
 @app.route('/summary', methods = ['GET'])
@@ -202,13 +204,29 @@ def summary():
 @app.route('/user', methods = ['GET'])
 def viewUser():
     #Check that only logged in user can access /user
-    if (session.get('username') == None or User.query.filter_by(user_username=session.get('username')).all() == []):
+    if session.get('username') == None or User.query.filter_by(user_username=session.get('username')).all() == []:
         return redirect('/')
 
-    #TODO: Search by show/venue. Rating based should be >=rating, not exact
+    placeFilter = request.args.get('placeFilter')
+    ratingFilter = request.args.get('ratingFilter')
+    tagsFilter = request.args.get('tagsFilter')
+
     venues = Venue.query.all()
+    if placeFilter:
+        venues = list(filter(lambda venue: venue.venue_place.lower() == placeFilter.lower(), venues))
+
     for venue in venues:
-        venue.showsArr = Show.query.filter_by(show_venue_id=venue.venue_id).all()
+        venue.display = True
+        showsInVenue = Show.query.filter_by(show_venue_id=venue.venue_id).all()
+        if ratingFilter:
+            showsInVenue = list(filter(lambda show: show.show_rating >= int(ratingFilter), showsInVenue))
+        if tagsFilter:
+            showsInVenue = list(filter(lambda show: tagsFilter.lower() in show.show_tags.lower(), showsInVenue))
+        venue.showsArr = showsInVenue
+        if venue.showsArr == []:
+            venue.display = False
+
+    venues = list(filter(lambda venue: venue.display == True, venues))
     return render_template('user_view.html', username=session['username'], venues=venues)
 
 
@@ -224,13 +242,15 @@ def bookShow():
 def postBookShow():
     bookCount = int(request.form.get('bookCount'))
     showId = request.form.get('showId')
+    show = Show.query.get(showId)
+    if show.show_available_seats < bookCount:
+        return redirect('/book/show')
     username = session['username']
     userId = User.query.filter_by(user_username=username).all()[0].user_id
     # Create row in Booking table
     booking = Booking(booking_tickets_booked=bookCount, booking_show_id=showId, booking_user_id=userId)
     db.session.add(booking)
     # Update available seat count in Show table
-    show = Show.query.get(showId)
     show.show_available_seats = show.show_available_seats - bookCount
     db.session.commit()
     return redirect('/bookings')
