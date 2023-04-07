@@ -23,7 +23,7 @@ class User(db.Model):
     user_password = db.Column(db.String(50), nullable = False)
     bookings = db.relationship("Booking", backref = "user", cascade="all, delete")
     def __repr__(self):
-        return "<Users %r>" %self.user_username
+        return "<User %r>" %self.user_username
 
 class Venue(db.Model):
     __tablename__ = "venue"
@@ -34,7 +34,7 @@ class Venue(db.Model):
     venue_capacity = db.Column(db.Integer(), nullable = False)
     shows = db.relationship("Show", backref="venue", passive_deletes='all')
     def __repr__(self):
-        return "<Users %r>" %self.user_name
+        return "<Venue %r>" %self.venue_name
 
 class Show(db.Model):
     __tablename__ = "show"
@@ -57,5 +57,5 @@ class Booking(db.Model):
     booking_show_id = db.Column(db.Integer(), db.ForeignKey("show.show_id", ondelete='CASCADE'))
     booking_user_id = db.Column(db.Integer(), db.ForeignKey("user.user_id"), nullable=False)
     def __repr__(self):
-        return "<Show %r>" %self.show_name
+        return "<Booking %r>" %self.booking_id
 
