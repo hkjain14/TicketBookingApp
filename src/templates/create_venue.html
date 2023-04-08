@@ -42,13 +42,13 @@
                 <form action="/create/venue" method="post">
 
                     <label for="venueName" class="form-label" style="font-weight:500">Venue Name: </label>
-                    <input id="venueName" type="text" name="venueName" class="form-control" required>
+                    <input id="venueName" type="text" maxlength="20" name="venueName" class="form-control" required>
                     <br />
                     <label for="place" class="form-label" style="font-weight:500">Place: </label>
-                    <input id="place" type="text" name="place" class="form-control" required>
+                    <input id="place" type="text" maxlength="20" name="place" class="form-control" required>
                     <br />
                     <label for="location" class="form-label" style="font-weight:500">Location: </label>
-                    <input id="location" type="text" name="location" class="form-control" required>
+                    <input id="location" type="text" maxlength="20" name="location" class="form-control" required>
                     <br />
                     <label for="capacity" class="form-label" style="font-weight:500">Capacity: </label>
                     <input id="capacity" type="number" min="0" name="capacity" class="form-control" required>

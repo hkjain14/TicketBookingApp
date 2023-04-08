@@ -45,11 +45,11 @@
                     <form action="/register" method="post">
                         <div class="mb-3">
                             <label for="username" class="form-label">Enter username:</label>
-                            <input id="username" type="text" name="username" class="form-control" required>
+                            <input id="username" type="text" name="username" maxlength="16" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Enter password:</label>
-                            <input id="password" type="password" name="password" class="form-control" required>
+                            <input id="password" type="password" name="password" maxlength="16" class="form-control" required>
                         </div>
                         <div class="d-grid">
                             <input type="submit" name="login_type" value="Register" class="btn btn-outline-danger">
@@ -57,11 +57,6 @@
                         </div>
                     </form>
 
-                    <form action="/register" method="post">
-                        <div class="d-grid gap-2 my-1">
-                            
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

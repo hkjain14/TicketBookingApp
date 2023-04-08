@@ -12,15 +12,15 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.close()
 class Admin(db.Model):
     admin_id = db.Column(db.Integer(), primary_key = True)
-    admin_username = db.Column(db.String(50), nullable=False)
-    admin_password = db.Column(db.String(50), nullable = False)
+    admin_username = db.Column(db.String(16), nullable=False)
+    admin_password = db.Column(db.String(16), nullable = False)
     def __repr__(self):
         return "<Admin %r>" %self.admin_username
 
 class User(db.Model):
     user_id = db.Column(db.Integer(), primary_key = True)
-    user_username = db.Column(db.String(50), nullable=False)
-    user_password = db.Column(db.String(50), nullable = False)
+    user_username = db.Column(db.String(16), nullable=False)
+    user_password = db.Column(db.String(16), nullable = False)
     bookings = db.relationship("Booking", backref = "user", cascade="all, delete")
     def __repr__(self):
         return "<User %r>" %self.user_username
@@ -28,9 +28,9 @@ class User(db.Model):
 class Venue(db.Model):
     __tablename__ = "venue"
     venue_id = db.Column(db.Integer(), primary_key = True)
-    venue_name = db.Column(db.String(50), nullable=False)
-    venue_place = db.Column(db.String(50), nullable=False)
-    venue_location = db.Column(db.String(50), nullable = False)
+    venue_name = db.Column(db.String(20), nullable=False)
+    venue_place = db.Column(db.String(20), nullable=False)
+    venue_location = db.Column(db.String(20), nullable = False)
     venue_capacity = db.Column(db.Integer(), nullable = False)
     shows = db.relationship("Show", backref="venue", passive_deletes='all')
     def __repr__(self):
@@ -39,10 +39,10 @@ class Venue(db.Model):
 class Show(db.Model):
     __tablename__ = "show"
     show_id = db.Column(db.Integer(), primary_key=True)
-    show_name = db.Column(db.String(50), nullable=False)
+    show_name = db.Column(db.String(20), nullable=False)
     show_rating = db.Column(db.Integer(), nullable=False)
-    show_start_time = db.Column(db.String(50), nullable=False)
-    show_end_time = db.Column(db.String(50), nullable=False)
+    show_start_time = db.Column(db.String(10), nullable=False)
+    show_end_time = db.Column(db.String(10), nullable=False)
     show_tags = db.Column(db.String(50), nullable=False)
     show_price = db.Column(db.Integer(), nullable=False)
     show_available_seats = db.Column(db.Integer(), nullable=False)

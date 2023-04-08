@@ -41,19 +41,19 @@
     <div class="container mx-auto" style="max-width:500px">
                 <form action="/create/show" method="post">
                     <label for="showName" class="form-label" style="font-weight:500">Show Name: </label>
-                    <input id="showName" type="text" name="showName" class="form-control" required>
+                    <input id="showName" type="text" maxlength="20" name="showName" class="form-control" required>
                     <br />
                     <label for="rating" class="form-label" style="font-weight:500">Rating: </label>
                     <input id="rating" type="number" min="1" max="5" name="rating" class="form-control" required>
                     <br />
                     <label for="startTime" class="form-label" style="font-weight:500">Start Time: </label>
-                    <input id="startTime" type="text" name="startTime" class="form-control" required>
+                    <input id="startTime" type="text" maxlength="10" name="startTime" class="form-control" required>
                     <br />
                     <label for="endTime" class="form-label" style="font-weight:500">End Time: </label>
-                    <input id="endTime" type="text" name="endTime" class="form-control" required>
+                    <input id="endTime" type="text" maxlength="10" name="endTime" class="form-control" required>
                     <br />
                     <label for="tags" class="form-label" style="font-weight:500">Tags: </label>
-                    <input id="tags" type="text" name="tags" class="form-control" required>
+                    <input id="tags" type="text" maxlength="50" name="tags" class="form-control" required>
                     <br />
                     <label for="price" class="form-label" style="font-weight:500">Price: </label>
                     <input id="price" type="number" min="0" name="price" class="form-control" required>

@@ -1,5 +1,8 @@
 from flask import Flask, render_template, redirect, request, url_for, session
 from models import *
+import matplotlib.pyplot as plt
+import numpy as np
+import os
 
 app = Flask(__name__)
 db.init_app(app)
@@ -196,8 +199,27 @@ def deleteShow():
 
 @app.route('/summary', methods = ['GET'])
 def summary():
-    # TODO: Fill summary
-    return render_template('summary.html', username=session['username'])
+    shows = Show.query.all()
+
+    def absolute_value(val):
+        return int(np.round(val / 100. * values.sum(), 0))
+
+    for show in shows:
+        venueId = show.show_venue_id
+        show.bookedSeats = Venue.query.get(venueId).venue_capacity - show.show_available_seats
+        values = np.array([show.show_available_seats, show.bookedSeats])
+        mylabels = ["Available seats", "Booked Seats"]
+        plt.title(f'{show.show_name} - ShowId: {show.show_id}' )
+        plt.pie(values, labels=mylabels, autopct=absolute_value)
+        plt.legend()
+        plt.savefig(f'src/templates/summary_images/my_plot_{show.show_id}.png')
+        plt.close()
+
+    dirPath = os.getcwd() + '/src/templates/summary_images/'
+    cwd = os.listdir(dirPath)
+
+    # plotPaths = [dirPath + e for e in cwd]
+    return render_template('summary.html', username=session['username'], plotPaths=cwd)
 
 
 ### User view

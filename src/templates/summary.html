@@ -36,7 +36,9 @@
             </div>
         </nav>
 <div>
-<h3>Summary Page</h3>
+{% for plotPath in plotPaths %}
+    <img src="summary_images/{{ plotPath }}">
+    {% endfor %}
 </div>
 
 
