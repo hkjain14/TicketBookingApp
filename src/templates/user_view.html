@@ -59,6 +59,9 @@
             <input class="form-control me-4" type="text" placeholder="Search shows by tags" name="tagsFilter">
             <button class="btn btn-warning" type="submit">Search</button>
         </form>
+        <form>
+            <button class="btn btn-danger mx-3" type="submit">Clear Filter</button>
+        </form>
     </div>
 </nav>
 
@@ -76,18 +79,20 @@
                             <div class="col-md-3">
                                 <div class="card my-3">
                                     <div class="card-body">
-                                        <h5 class="card-subtitle mb-2">{{ show.show_name }}</h5>
-                                        <p class="card-text">{{ show.show_start_time }}</p>
+                                        <h5 class="card-subtitle mb-2">{{ show.show_name }} &nbsp&nbsp&nbsp&nbsp  {{ show.show_rating }}⭐️</h5>
+                                        <p class="card-text">{{ show.show_tags }}</p>
+                                        <p class="card-text">{{ show.show_start_time }} - {{ show.show_end_time }}</p>
                                         <form action="/book/show" method="get">
                                             <input type="hidden" name="showId" value="{{ show.show_id }}">
-                                            <input type="submit" id="bookButton" value="Book" class="btn btn-danger">
+                                            <input type="submit" id="bookButton-{{ show.show_id }}" value="Book" class="btn btn-danger">
                                         </form>
                                         <script>
-                                            const availableSeats = {{ show.show_available_seats }};
+                                            var availableSeats = {{ show.show_available_seats }};
                                             if (availableSeats <= 0) {
-                                                const bookButtonEl = document.getElementById("bookButton");
+                                                const bookButtonEl = document.getElementById("bookButton-{{ show.show_id }}");
                                                 bookButtonEl.value = "Housefull";
                                                 bookButtonEl.disabled = true;
+                                                bookButtonEl.className="btn btn-secondary"
                                             }
                                         </script>
                                     </div>
