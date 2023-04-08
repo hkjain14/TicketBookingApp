@@ -3,6 +3,7 @@ from models import *
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import shutil
 
 app = Flask(__name__)
 db.init_app(app)
@@ -199,11 +200,14 @@ def deleteShow():
 
 @app.route('/summary', methods = ['GET'])
 def summary():
-    shows = Show.query.all()
+    dirPath = os.getcwd() + '/src/static/summary_images'
+    shutil.rmtree(dirPath)
+    os.mkdir(dirPath)
 
     def absolute_value(val):
         return int(np.round(val / 100. * values.sum(), 0))
 
+    shows = Show.query.all()
     for show in shows:
         venueId = show.show_venue_id
         show.bookedSeats = Venue.query.get(venueId).venue_capacity - show.show_available_seats
@@ -215,7 +219,6 @@ def summary():
         plt.savefig(f'src/static/summary_images/my_plot_{show.show_id}.png')
         plt.close()
 
-    dirPath = os.getcwd() + '/src/static/summary_images'
     paths = os.listdir(dirPath)
     pathUrlArr = []
     for path in paths:
