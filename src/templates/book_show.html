@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('profile')}}">Profile</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('viewUser')}}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ url_for('bookings')}}">Bookings</a>
@@ -42,31 +42,33 @@
         </div>
     </nav>
 
+<div class="container">
+    <div style="display:flex; justify-content:space-between; font-weight:500; font-size:large ">
+        <div>Booking - {{showName}} {{venueName}}</div>
+        <div>Available Seats - {{seats}}</div>
+        <div>Time - {{startTime}} - {{endTime}}</div>
+    </div>
+</div>    
 
 <br/>
-Booking - {{showName}} {{venueName}}
-
 <br/>
-Time - {{startTime}} - {{endTime}}
-
-<br/>
-Available Seats - {{seats}}
-
 <br/>
 
 
-<form action="/book/show" method="post">
+<div class="container mx-auto" style="max-width:500px">
+    <form action="/book/show" method="post">
+    
     <input type="hidden" name="showId" value={{showId}}>
-    <label for="bookCount">Number: </label>
-    <input id="bookCount" oninput="bookCountChangeFunc(this)"  type="number" min="0" max={{seats}} name="bookCount" required>
+    <label for="bookCount" class="form-label" style="font-weight:500">Number of tickets: </label>
+    <input id="bookCount" oninput="bookCountChangeFunc(this)"  type="number" min="0" max={{seats}} name="bookCount" class="form-control" required>
     <br/>
-    <label for="price">Price: </label>
-    <input type="number" id="price" value={{price}} readonly>
+    <label for="price" class="form-label" style="font-weight:500">Price: </label>
+    <input type="number" id="price" value={{price}} class="form-control" readonly>
     <br/>
-    <label for="totalAmount">Total: </label>
-    <input type="number" id="totalAmount" readonly>
+    <label for="totalAmount" class="form-label" style="font-weight:500">Total: </label>
+    <input type="number" id="totalAmount" class="form-control" readonly>
     <br/>
-    <input type="submit" value="Confirm Booking">
+    <input type="submit" value="Confirm Booking" class="btn btn-danger btn float-end">
     <script>
         const price = {{price}};
         function bookCountChangeFunc(bookCountEl) {
@@ -74,6 +76,7 @@ Available Seats - {{seats}}
         }
     </script>
 </form>
+</div>
 
 
 <!-- Bootstrap JavaScript links -->
