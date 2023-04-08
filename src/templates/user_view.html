@@ -60,7 +60,6 @@
                     <input class="form-control me-4" type="text" placeholder="Search shows by tags" name="tagsFilter">
                     <button class="btn btn-warning" type="submit">Search</button>
                 </form>
-                </form>
             </div>
         </nav>
 
@@ -74,13 +73,13 @@
             {% for venue in venues %}
             <div class="card col-md-12 my-3">
                 <div class="card-body">
-                    <h4 class="card-title">{{ venue.venue_name }} - {{ venue.venue_place }}</h5>
+                    <h4 class="card-title">{{ venue.venue_name }} - {{ venue.venue_place }}</h4>
                     <div class="row">
                         {% for show in venue.showsArr %}
                         <div class="col-md-3">
                             <div class="card my-3">
                                 <div class="card-body">
-                                    <h5 class="card-subtitle mb-2">{{ show.show_name }}</h6>
+                                    <h5 class="card-subtitle mb-2">{{ show.show_name }}</h5>
                                     <p class="card-text">{{ show.show_start_time }}</p>
                                     <form action="/book/show" method="get">
                                         <input type="hidden" name="showId" value="{{ show.show_id }}">
