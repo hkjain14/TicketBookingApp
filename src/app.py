@@ -212,14 +212,15 @@ def summary():
         plt.title(f'{show.show_name} - ShowId: {show.show_id}' )
         plt.pie(values, labels=mylabels, autopct=absolute_value)
         plt.legend()
-        plt.savefig(f'src/templates/summary_images/my_plot_{show.show_id}.png')
+        plt.savefig(f'src/static/summary_images/my_plot_{show.show_id}.png')
         plt.close()
 
-    dirPath = os.getcwd() + '/src/templates/summary_images/'
-    cwd = os.listdir(dirPath)
-
-    # plotPaths = [dirPath + e for e in cwd]
-    return render_template('summary.html', username=session['username'], plotPaths=cwd)
+    dirPath = os.getcwd() + '/src/static/summary_images'
+    paths = os.listdir(dirPath)
+    pathUrlArr = []
+    for path in paths:
+        pathUrlArr.append(url_for('static', filename=f'summary_images/{path}'))
+    return render_template('summary.html', username=session['username'], plotPaths=pathUrlArr)
 
 
 ### User view
